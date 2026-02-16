@@ -144,3 +144,7 @@ def ssrf(url: str = Query(..., description="URL a la que hacer la petición")):
         return {"url": url, "status_code": r.status_code, "content": r.text[:500]}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+@app.get("/entregador-api")
+def entregador_api():
+    return ULTRA_SECRET_API_KEY
