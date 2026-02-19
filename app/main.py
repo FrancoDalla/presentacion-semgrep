@@ -6,7 +6,6 @@ import sqlite3
 import requests
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "data", "database.db")
-#ULTRA_SECRET_API_KEY = "sk-proj-Nz3BIzijIqwZehGsXnDGiXqFyUQj1KBORzH5ewhSXxVX4ggBYWVRAd7AelBsxzSlU-1aWtyznXT5BlNkFJfWXFkveZ7bBzZXyuJd172QZ_xlmF8qFkAAvTumBu9Gs9VKTEOtjIC8iCPOuAs0IICo14q4oOkA"
 
 def get_conn():
 	conn = sqlite3.connect(DB_PATH)
@@ -67,11 +66,7 @@ def search_users(username: str = Query(..., description="Username a buscar")):
 	"""
 	conn = get_conn()
 	cursor = conn.cursor()
-
-	# Concatenacion directa
-	#query = f"SELECT id, username, email FROM users WHERE username = '{username}'"
-	#cursor.execute(query)
-
+ 
 	#FIX:
 	query = "SELECT id, username, email FROM users WHERE username = ?"
 	cursor.execute(query, (username,))
@@ -79,19 +74,19 @@ def search_users(username: str = Query(..., description="Username a buscar")):
 	rows = cursor.fetchall()
 	conn.close()
 
-	#return {"query": query, "results": [dict(r) for r in rows]}
 	return {"results": [dict(r) for r in rows]}
 
 
 # ============================================================
 # 2) Hardcoded Secret (TODO)
 # ============================================================
-
+"""
 # TODO: crear un archivo src/config.py con un "API_KEY = '...'"
 # y un endpoint /config que lo devuelva.
 # FIX: levantarlo de env var (os.environ o pydantic settings).
 
-
+resuleto 
+"""
 # ============================================================
 # 3) Command Injection (Vulnerable)
 # ============================================================
