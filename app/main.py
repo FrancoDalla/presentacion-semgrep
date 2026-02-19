@@ -69,17 +69,19 @@ def search_users(username: str = Query(..., description="Username a buscar")):
 	cursor = conn.cursor()
 
 	# Concatenacion directa
-	query = f"SELECT id, username, email FROM users WHERE username = '{username}'"
-	cursor.execute(query)
+	#query = f"SELECT id, username, email FROM users WHERE username = '{username}'"
+	#cursor.execute(query)
 
-	# FIX:
-	# query = "SELECT id, username, email FROM users WHERE username = ?"
-	# cursor.execute(query, (username,))
+	#FIX:
+	query = "SELECT id, username, email FROM users WHERE username = ?"
+	cursor.execute(query, (username,))
 
 	rows = cursor.fetchall()
 	conn.close()
 
-	return {"query": query, "results": [dict(r) for r in rows]}
+	#return {"query": query, "results": [dict(r) for r in rows]}
+	return {"results": [dict(r) for r in rows]}
+
 
 # ============================================================
 # 2) Hardcoded Secret (TODO)
