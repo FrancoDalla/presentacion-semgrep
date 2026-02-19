@@ -6,7 +6,7 @@ import sqlite3
 import requests
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "data", "database.db")
-ULTRA_SECRET_API_KEY = "sk-proj-Nz3BIzijIqwZehGsXnDGiXqFyUQj1KBORzH5ewhSXxVX4ggBYWVRAd7AelBsxzSlU-1aWtyznXT5BlNkFJfWXFkveZ7bBzZXyuJd172QZ_xlmF8qFkAAvTumBu9Gs9VKTEOtjIC8iCPOuAs0IICo14q4oOkA"
+#ULTRA_SECRET_API_KEY = "sk-proj-Nz3BIzijIqwZehGsXnDGiXqFyUQj1KBORzH5ewhSXxVX4ggBYWVRAd7AelBsxzSlU-1aWtyznXT5BlNkFJfWXFkveZ7bBzZXyuJd172QZ_xlmF8qFkAAvTumBu9Gs9VKTEOtjIC8iCPOuAs0IICo14q4oOkA"
 
 def get_conn():
 	conn = sqlite3.connect(DB_PATH)
@@ -146,7 +146,11 @@ def ssrf(url: str = Query(..., description="URL a la que hacer la petición")):
         return {"url": url, "status_code": r.status_code, "content": r.text[:500]}
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+    
+    
 
+"""
 @app.get("/entregador-api")
 def entregador_api():
     return ULTRA_SECRET_API_KEY
+""" 
