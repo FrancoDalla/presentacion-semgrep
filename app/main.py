@@ -6,6 +6,9 @@ import re
 import os
 import sqlite3
 import requests
+import socket
+import ipaddress
+from urllib.parse import urlparse
 
 DB_PATH = os.path.join(os.path.dirname(__file__), "data", "database.db")
 
@@ -119,9 +122,59 @@ def ping_host(host: str = Query(..., description="Host a hacer ping")):
 # ============================================================
 # 4) SSRF (TODO)
 # ============================================================
-
+"""
 # TODO (vulnerable): requests.get(url) directo
 # Fix: allowlist de dominios / bloquear IPs privadas / timeouts / etc.
+"""
+
+def is_safe_url(url: str) -> bool:
+    try:
+        parsed = urlparse(url)
+
+        # Solo permitir http y https
+        if parsed.scheme not in ("http", "https"):
+            return False
+
+        hostname = parsed.hostname
+        if not hostname:
+            return False
+
+        # Resolver dominio a IP
+        ip = socket.gethostbyname(hostname)
+        ip_obj = ipaddress.ip_address(ip)
+
+        # Bloquear IPs privadas, loopback y reservadas
+        if (
+            ip_obj.is_private
+            or ip_obj.is_loopback
+            or ip_obj.is_reserved
+            or ip_obj.is_link_local
+        ):
+            return False
+
+        return True
+
+    except Exception:
+        return False
+    
+@app.get("/external-fetch")
+def external_fetch(url: str = Query(..., description="URL externa permitida")):
+
+    if not is_safe_url(url):
+        raise HTTPException(status_code=400, detail="URL no permitida")
+
+    try:
+        r = requests.get(url, timeout=3)
+        return {
+            "url": url,
+            "status_code": r.status_code,
+            "content": r.text[:300]
+        }
+
+    except requests.RequestException:
+        raise HTTPException(status_code=500, detail="Error al hacer la petición")
+
+ 
 
 # ============================================================
 # 5) Path Traversal (Vulnerable)
